@@ -4,7 +4,7 @@ pkill -9 -x zmap 2>/dev/null || true
 pkill -9 -f './adb 5555' 2>/dev/null || true
 pkill -9 -f 'spread.sh' 2>/dev/null || true
 sleep 2
-for s in jenkins realtek dvr fiber zhone adb cms; do
+for s in adb cms; do
   screen -S "$s" -X quit 2>/dev/null || true
 done
 screen -wipe 2>/dev/null || true
