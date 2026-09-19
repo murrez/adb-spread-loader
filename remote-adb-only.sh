@@ -1,10 +1,6 @@
 #!/bin/bash
 set -e
 pkill -9 -x zmap 2>/dev/null || true
-pkill -9 -f 'jenkins-brute' 2>/dev/null || true
-pkill -9 -f 'jenkins-load' 2>/dev/null || true
-pkill -9 -f 'realtek-scanner/realtek' 2>/dev/null || true
-pkill -9 -f 'cirqueira-exploits' 2>/dev/null || true
 pkill -9 -f './adb 5555' 2>/dev/null || true
 pkill -9 -f 'spread.sh' 2>/dev/null || true
 sleep 2
